@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Valorant Characters</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Valorant Agents</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-5 my-3">
+        <div class="row">
+            <div class="col-12">
+                <div class="display-4 text-center">Valorant Agents</div>
+            </div>
+        </div>
+        <div class="row my-3 justify-content-center">
+            <div class="col-md-3">
+                <select class="form-select" id="roleSelect">
+                    <option value="All" selected>All Roles</option>
+                    <option value="Duelist">Duelist</option>
+                    <option value="Controller">Controller</option>
+                    <option value="Sentinel">Sentinel</option>
+                    <option value="Initiator">Initiator</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row" id="contentArea">
+    </div>
+
+    <script>
+        var contentArea = document.getElementById("contentArea");
+        var selectedRole = document.getElementById("roleSelect").value;
+        var agentsData = [];
+
+        const getCharacter = async () => {
+            const response = await fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true');
+            const data = await response.json();
+            agentsData = data.data;
+            displayAgents(agentsData);
+        }
+
+        const displayAgents = (agents) => {
+            contentArea.innerHTML = "";
+            agents.forEach(agent => {
+                const displayIcon = agent.displayIcon;
+                const role = agent.role ? agent.role.displayName : "No Role";
+
+                contentArea.innerHTML += `
+                    <div class="col-12 col-lg-6 col-xl-3 my-3">
+                        <div class="card shadow p-0 rounded-3 text-center">
+                            <div class="mx-auto">
+                                <img src="${displayIcon}" class="card-img-top" style="object-fit: cover;">
+                            </div>
+                            <div class="my-3 h4">${agent.displayName}</div>
+                            <div class="text-muted h5">${role}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        getCharacter();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
